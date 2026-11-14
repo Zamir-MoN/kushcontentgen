@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en" class="light" style="color-scheme: light;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Blog Content & Auto-Post Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      color-scheme: light !important;
+      --bg-page: #f1f5f9;
+      --card-bg: #ffffff;
+      --border-color: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+    }
+
+    * {
+      color-scheme: light !important;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(255, 255, 255, 0.9) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(226, 232, 240, 0.6) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    code, pre {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Force all inputs, selects, textareas to be crisp pure white with dark text */
+    input, select, textarea {
+      background-color: #ffffff !important;
+      color: #0f172a !important;
+      border: 1.5px solid #cbd5e1 !important;
+      border-radius: 0.625rem !important;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+      transition: all 0.2s ease-in-out !important;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #94a3b8 !important;
+      opacity: 1 !important;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      background-color: #ffffff !important;
+      color: #0f172a !important;
+      border-color: #2563eb !important;
+      box-shadow: inset 0 1px 2px rgba(37, 99, 235, 0.05), 0 0 0 3px rgba(37, 99, 235, 0.18) !important;
+      outline: none !important;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+      background-position: right 0.75rem center !important;
+      background-repeat: no-repeat !important;
+      background-size: 1.25em 1.25em !important;
+      padding-right: 2.5rem !important;
+    }
+
+    select option {
+      background-color: #ffffff !important;
+      color: #0f172a !important;
+      padding: 8px 12px;
+    }
+
+    /* Tactile Modern Panels */
+    .tactile-panel {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-top-color: #ffffff;
+      box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+      border-radius: 1rem;
+    }
+
+    .tactile-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 8px -1px rgba(0, 0, 0, 0.04);
+      border-radius: 0.875rem;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .tactile-card:hover {
+      box-shadow: 0 6px 18px -2px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
+    }
+
+    /* Primary Glossy Button */
+    .btn-primary {
+      background: linear-gradient(180deg, #3b82f6 0%, #2563eb 60%, #1d4ed8 100%);
+      color: #ffffff !important;
+      border: 1px solid #1d4ed8;
+      border-top: 1px solid #93c5fd;
+      border-bottom: 2px solid #1e3a8a;
+      text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      font-weight: 600;
+      transition: all 0.15s ease-out;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 60%, #1d4ed8 100%);
+      box-shadow: 0 6px 14px rgba(37, 99, 235, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px);
+      background: linear-gradient(180deg, #1d4ed8 0%, #2563eb 100%);
+      border-bottom: 1px solid #1e3a8a;
+      box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: #334155 !important;
+      border: 1px solid #cbd5e1;
+      border-bottom: 2px solid #94a3b8;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      font-weight: 600;
+      transition: all 0.15s ease-out;
+    }
+
+    .btn-secondary:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-16">
+  <!-- Top Navigation Header -->
+  <header class="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/25">
+          <i data-lucide="newspaper" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base font-bold text-slate-900 tracking-tight">Blog Content & Auto-Post Studio</h1>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 border border-blue-200">Content Only Microservice</span>
+          </div>
+          <p class="text-xs text-slate-500">Autonomous SEO blog writer • Deduplicated recurring publisher • Publication-ready markdown articles</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="font-bold text-emerald-800">Port 4000 Active</span>
+        </div>
+        <a href="/api/health" target="_blank" class="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors">
+          <span>Health Probe</span>
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <!-- Top Feature Notice Banner -->
+    <div class="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border border-blue-200 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shrink-0">
+          <i data-lucide="sparkles" class="w-4 h-4 text-white"></i>
+        </div>
+        <p class="text-xs text-slate-700">
+          <strong class="font-bold text-slate-900">Dedicated Blog Content Architecture:</strong> Generates publication-ready, SEO-optimized articles with structured outlines, headings, takeaways, and FAQ schema ready for immediate website publishing.
+        </p>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <span class="text-[11px] font-mono font-bold px-2 py-1 rounded bg-white text-indigo-700 border border-indigo-200">
+          POST /api/blogs/generate
+        </span>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex border-b border-slate-300 space-x-6 text-sm font-semibold">
+      <button onclick="switchTab('generator')" id="tab-btn-generator" class="pb-3 border-b-2 border-blue-600 text-blue-700 flex items-center gap-2 transition-all">
+        <i data-lucide="pen-tool" class="w-4 h-4"></i> Instant Blog Generator
+      </button>
+      <button onclick="switchTab('schedules')" id="tab-btn-schedules" class="pb-3 border-b-2 border-transparent text-slate-600 hover:text-slate-900 flex items-center gap-2 transition-all">
+        <i data-lucide="calendar-clock" class="w-4 h-4"></i> Auto-Post Schedules
+      </button>
+      <button onclick="switchTab('blogs')" id="tab-btn-blogs" class="pb-3 border-b-2 border-transparent text-slate-600 hover:text-slate-900 flex items-center gap-2 transition-all">
+        <i data-lucide="library" class="w-4 h-4"></i> Published Blog Feed
+      </button>
+      <button onclick="switchTab('api-docs')" id="tab-btn-api-docs" class="pb-3 border-b-2 border-transparent text-slate-600 hover:text-slate-900 flex items-center gap-2 transition-all">
+        <i data-lucide="code" class="w-4 h-4"></i> Content API
+      </button>
+    </div>
+
+    <!-- TAB 1: INSTANT BLOG GENERATOR -->
+    <div id="tab-generator" class="space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Generator Form Card -->
+        <div class="lg:col-span-5 tactile-panel p-6 space-y-5">
+          <div class="border-b border-slate-100 pb-3">
+            <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+              <i data-lucide="edit-3" class="w-4 h-4 text-blue-600"></i> Generate Single Blog Post
+            </h2>
+            <p class="text-xs text-slate-500 mt-1">
+              Produces a publication-ready SEO article with structured metadata, key takeaways, and FAQ schema.
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-800 mb-1.5">Topic or Headline <span class="text-rose-500">*</span></label>
+              <input type="text" id="gen-topic" placeholder="e.g. Healthy teeth daily routine & expert dental care" class="w-full px-3.5 py-2.5 text-sm">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-800 mb-1.5">Tone of Voice</label>
+                <select id="gen-tone" class="w-full px-3.5 py-2.5 text-sm">
+                  <option value="Professional" selected>Professional & Authoritative</option>
+                  <option value="Conversational">Conversational & Friendly</option>
+                  <option value="Educational">Educational & Informative</option>
+                  <option value="Persuasive">Persuasive & High Conversion</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-800 mb-1.5">Target Length</label>
+                <select id="gen-length" class="w-full px-3.5 py-2.5 text-sm">
+                  <option value="Standard" selected>Standard (~1,000 words)</option>
+                  <option value="Comprehensive">Comprehensive (~1,500 words)</option>
+                  <option value="Short">Quick Read (~600 words)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-800 mb-1.5">Target Keywords <span class="text-slate-400 font-normal">(comma separated)</span></label>
+              <input type="text" id="gen-keywords" placeholder="e.g. healthy teeth, dental hygiene, brushing tips" class="w-full px-3.5 py-2.5 text-sm">
+            </div>
+
+            <button id="btn-generate-blog" onclick="generateSingleBlog()" class="w-full py-3 px-4 rounded-xl btn-primary text-sm flex items-center justify-center gap-2 mt-2">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              <span>Generate Blog Article</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Output Preview Column -->
+        <div class="lg:col-span-7 space-y-6">
+          <!-- Empty State -->
+          <div id="blog-output-empty" class="tactile-panel p-12 text-center flex flex-col items-center justify-center space-y-3 min-h-[460px]">
+            <div class="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center shadow-xs">
+              <i data-lucide="file-text" class="w-7 h-7 text-blue-600"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 text-base">Your Generated Blog Will Appear Here</h3>
+            <p class="text-xs text-slate-500 max-w-md leading-relaxed">Enter a topic on the left and click Generate Blog Article. The full publication-ready markdown article and structured metadata will render in real time.</p>
+          </div>
+
+          <!-- Loading State -->
+          <div id="blog-output-loading" class="hidden tactile-panel p-12 text-center flex flex-col items-center justify-center space-y-4 min-h-[460px]">
+            <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div class="space-y-1">
+              <p class="text-sm font-bold text-slate-900">Synthesizing SEO Article & Structured Outlines...</p>
+              <p class="text-xs text-slate-500">Conducting topical analysis, drafting markdown sections, and structuring FAQ schema.</p>
+            </div>
+          </div>
+
+          <!-- Generated Article View (Pure Content) -->
+          <div id="blog-output-card" class="hidden tactile-panel p-6 space-y-6">
+            <!-- Article Header & Badges -->
+            <div class="space-y-3 border-b border-slate-100 pb-5">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Live on Website Blog
+                  </span>
+                  <span id="out-reading-time" class="text-xs text-slate-500 font-semibold">5 min read</span>
+                </div>
+                <span id="out-slug" class="text-[11px] font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded border border-slate-200"></span>
+              </div>
+              <h2 id="out-title" class="text-xl font-extrabold text-slate-900 leading-snug"></h2>
+              <p id="out-excerpt" class="text-xs text-slate-600 leading-relaxed italic bg-slate-50 p-2.5 rounded-lg border border-slate-200"></p>
+            </div>
+
+            <!-- Article Body -->
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Full Article Content (Markdown)</h3>
+                <button onclick="copyArticleBody(this)" class="text-xs text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-1">
+                  <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Article
+                </button>
+              </div>
+              <div id="out-body" class="prose prose-sm max-w-none text-slate-800 text-xs leading-relaxed space-y-3 bg-white p-5 rounded-xl border border-slate-200 shadow-inner whitespace-pre-wrap"></div>
+            </div>
+
+            <!-- FAQs -->
+            <div id="out-faq-container" class="space-y-2 pt-2 border-t border-slate-100">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Included FAQ Schema</h3>
+              <div id="out-faqs" class="space-y-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: AUTO-POST SCHEDULES -->
+    <div id="tab-schedules" class="hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">Website Blog Auto-Post Schedules</h2>
+          <p class="text-xs text-slate-500">Autonomous recurring blog publisher that discovers trending topics based on your business and deduplicates past posts.</p>
+        </div>
+        <button onclick="openScheduleModal()" class="py-2.5 px-4 rounded-xl btn-primary text-xs flex items-center gap-2 shadow-sm">
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          <span>Create Auto-Post Schedule</span>
+        </button>
+      </div>
+
+      <!-- Schedule Table -->
+      <div class="tactile-panel overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-100/70 border-b border-slate-200 text-slate-700 font-bold">
+                <th class="p-4">Business / Niche</th>
+                <th class="p-4">Cadence</th>
+                <th class="p-4">Post Time</th>
+                <th class="p-4">Last Run</th>
+                <th class="p-4">Next Run</th>
+                <th class="p-4">Status</th>
+                <th class="p-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="schedules-tbody" class="divide-y divide-slate-200 text-slate-800 bg-white">
+              <tr>
+                <td colspan="7" class="p-8 text-center text-slate-500 font-medium">Loading schedules...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: PUBLISHED BLOG FEED -->
+    <div id="tab-blogs" class="hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">Published Blog Articles Feed</h2>
+          <p class="text-xs text-slate-500">Live articles published to your website blog section.</p>
+        </div>
+        <button onclick="fetchPublishedBlogs()" class="py-2 px-3 rounded-lg btn-secondary text-xs flex items-center gap-1.5">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> <span>Refresh Feed</span>
+        </button>
+      </div>
+
+      <div id="blogs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="col-span-full p-8 text-center text-slate-400">Loading published blogs...</div>
+      </div>
+    </div>
+
+    <!-- TAB 4: CONTENT API DOCS -->
+    <div id="tab-api-docs" class="hidden space-y-6">
+      <div class="max-w-3xl tactile-panel p-6 space-y-6">
+        <div>
+          <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="code" class="w-5 h-5 text-blue-600"></i> Blog Content Generation API (POST /api/blogs/generate)
+          </h2>
+          <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+            Generate and publish complete SEO articles on demand from any external backend, CMS webhook, or agent.
+          </p>
+        </div>
+
+        <div class="space-y-4">
+          <div class="space-y-2">
+            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">cURL Request Example</h3>
+            <pre class="p-4 rounded-xl bg-slate-900 text-emerald-400 text-xs leading-relaxed overflow-x-auto">curl -X POST http://localhost:4000/api/blogs/generate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "topic": "Essential Daily Dental Hygiene Routines",
+    "tone": "Educational",
+    "length": "Standard (~1,000 words)",
+    "businessName": "Apex Dental",
+    "businessIndustry": "Dentistry"
+  }'</pre>
+          </div>
+
+          <div class="space-y-2">
+            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">JavaScript (fetch) Example</h3>
+            <pre class="p-4 rounded-xl bg-slate-900 text-cyan-400 text-xs leading-relaxed overflow-x-auto">const res = await fetch('http://localhost:4000/api/blogs/generate', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    topic: 'Healthy teeth daily routine',
+    tone: 'Professional',
+    length: 'Standard'
+  })
+});
+const data = await res.json();
+console.log('Article Title:', data.blog.title);
+console.log('Article Body:', data.blog.body);</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal: Create Schedule -->
+  <div id="modal-schedule" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full p-6 space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+          <i data-lucide="calendar" class="w-4 h-4 text-blue-600"></i> Create Auto-Post Schedule
+        </h3>
+        <button onclick="closeScheduleModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-800 mb-1.5">Business Name <span class="text-rose-500">*</span></label>
+          <input type="text" id="sch-biz-name" placeholder="e.g. Apex Health Clinic" class="w-full px-3.5 py-2.5 text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-800 mb-1.5">Industry / Profession <span class="text-rose-500">*</span></label>
+          <input type="text" id="sch-biz-industry" placeholder="e.g. Cosmetic Dentistry & Oral Health" class="w-full px-3.5 py-2.5 text-sm">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1.5">Posting Cadence <span class="text-rose-500">*</span></label>
+            <select id="sch-frequency" class="w-full px-3.5 py-2.5 text-sm">
+              <option value="daily" selected>Every Day (Daily)</option>
+              <option value="weekly">Every Week (Weekly)</option>
+              <option value="monthly">Every Month (Monthly)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1.5">Post Time (24h)</label>
+            <input type="time" id="sch-post-time" value="09:00" class="w-full px-3.5 py-2.5 text-sm">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-800 mb-1.5">Tone of Voice</label>
+          <select id="sch-tone" class="w-full px-3.5 py-2.5 text-sm">
+            <option value="Professional" selected>Professional & Authoritative</option>
+            <option value="Conversational">Conversational</option>
+            <option value="Educational">Educational</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+        <button onclick="closeScheduleModal()" class="px-4 py-2 rounded-lg btn-secondary text-xs">Cancel</button>
+        <button onclick="saveSchedule()" class="px-4 py-2 rounded-lg btn-primary text-xs">Save & Activate Schedule</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: View Single Blog (Pure Content) -->
+  <div id="modal-view-blog" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-2xl w-full p-6 space-y-4 max-h-[85vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 id="modal-blog-title" class="font-bold text-slate-900 text-base"></h3>
+        <button onclick="closeBlogModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div id="modal-blog-body" class="prose prose-sm text-xs leading-relaxed text-slate-800 whitespace-pre-wrap bg-slate-50 p-4 rounded-xl border border-slate-200"></div>
+    </div>
+  </div>
+
+  <script>
+    let activeTab = 'generator';
+    let currentBlogData = null;
+
+    function switchTab(tab) {
+      activeTab = tab;
+      ['generator', 'schedules', 'blogs', 'api-docs'].forEach(t => {
+        const el = document.getElementById(`tab-${t}`);
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (t === tab) {
+          el.classList.remove('hidden');
+          btn.className = 'pb-3 border-b-2 border-blue-600 text-blue-700 flex items-center gap-2 transition-all';
+        } else {
+          el.classList.add('hidden');
+          btn.className = 'pb-3 border-b-2 border-transparent text-slate-600 hover:text-slate-900 flex items-center gap-2 transition-all';
+        }
+      });
+      if (tab === 'schedules') fetchSchedules();
+      if (tab === 'blogs') fetchPublishedBlogs();
+      lucide.createIcons();
+    }
+
+    async function generateSingleBlog() {
+      const topic = document.getElementById('gen-topic').value.trim();
+      if (!topic) {
+        alert('Please enter a topic or headline');
+        return;
+      }
+
+      document.getElementById('blog-output-empty').classList.add('hidden');
+      document.getElementById('blog-output-card').classList.add('hidden');
+      document.getElementById('blog-output-loading').classList.remove('hidden');
+
+      const payload = {
+        topic,
+        tone: document.getElementById('gen-tone').value,
+        length: document.getElementById('gen-length').value,
+        keywords: document.getElementById('gen-keywords').value.trim()
+      };
+
+      try {
+        const res = await fetch('/api/blogs/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (data.success && data.blog) {
+          currentBlogData = data;
+          renderBlogOutput(data.blog);
+        } else {
+          alert('Generation failed: ' + (data.error || 'Unknown error'));
+          document.getElementById('blog-output-empty').classList.remove('hidden');
+        }
+      } catch (err) {
+        alert('Server request failed: ' + err.message);
+        document.getElementById('blog-output-empty').classList.remove('hidden');
+      } finally {
+        document.getElementById('blog-output-loading').classList.add('hidden');
+      }
+    }
+
+    function renderBlogOutput(blog) {
+      document.getElementById('out-title').textContent = blog.title;
+      document.getElementById('out-reading-time').textContent = `${blog.reading_time_minutes || 4} min read`;
+      document.getElementById('out-slug').textContent = `/${blog.slug || ''}`;
+      document.getElementById('out-excerpt').textContent = blog.excerpt || blog.meta_description || '';
+      document.getElementById('out-body').textContent = blog.body;
+
+      const faqsContainer = document.getElementById('out-faqs');
+      faqsContainer.innerHTML = '';
+      let faqs = [];
+      try {
+        faqs = typeof blog.faq === 'string' ? JSON.parse(blog.faq) : (blog.faq || []);
+      } catch (e) { faqs = []; }
+
+      if (faqs && faqs.length > 0) {
+        document.getElementById('out-faq-container').classList.remove('hidden');
+        faqs.forEach(f => {
+          const div = document.createElement('div');
+          div.className = 'p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs space-y-1';
+          div.innerHTML = `<p class="font-bold text-slate-900">Q: ${f.question}</p><p class="text-slate-700">A: ${f.answer}</p>`;
+          faqsContainer.appendChild(div);
+        });
+      } else {
+        document.getElementById('out-faq-container').classList.add('hidden');
+      }
+
+      document.getElementById('blog-output-card').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function copyArticleBody(btn) {
+      const body = document.getElementById('out-body').textContent;
+      navigator.clipboard.writeText(body);
+      const original = btn.innerHTML;
+      btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5"></i> Copied!`;
+      lucide.createIcons();
+      setTimeout(() => { btn.innerHTML = original; lucide.createIcons(); }, 2000);
+    }
+
+    async function fetchSchedules() {
+      const tbody = document.getElementById('schedules-tbody');
+      tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-500">Loading schedules...</td></tr>`;
+      try {
+        const res = await fetch('/api/schedules');
+        const data = await res.json();
+        const schedules = data.data || [];
+
+        if (schedules.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-500 bg-white">No schedules configured yet. Click 'Create Auto-Post Schedule' above.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = schedules.map(s => {
+          const bizName = s.business_name || s.name || 'My Business';
+          const industryName = s.business_industry || s.industry || 'General';
+          const postTime = s.preferred_time || s.post_time || '09:00';
+          const isActive = s.status === 'active' || s.is_active === 1 || s.is_active === '1' || s.is_active === true;
+
+          return `
+          <tr class="hover:bg-slate-50/80 transition-colors">
+            <td class="p-4 font-bold text-slate-900">${bizName}<br><span class="text-[11px] font-normal text-slate-500">${industryName}</span></td>
+            <td class="p-4"><span class="px-2.5 py-0.5 rounded-full font-bold uppercase text-[10px] bg-blue-50 text-blue-800 border border-blue-200">${s.frequency}</span></td>
+            <td class="p-4 font-mono font-medium">${postTime}</td>
+            <td class="p-4 text-slate-600">${s.last_run_at ? new Date(s.last_run_at).toLocaleString() : 'Never'}</td>
+            <td class="p-4 font-mono font-bold text-blue-700">${s.next_run_at ? new Date(s.next_run_at).toLocaleString() : 'Pending'}</td>
+            <td class="p-4">
+              <span class="inline-flex items-center gap-1.5 font-bold ${isActive ? 'text-emerald-700' : 'text-amber-700'}">
+                <span class="w-2 h-2 rounded-full ${isActive ? 'bg-emerald-500 shadow-[0_0_6px_#10b981]' : 'bg-amber-500'}"></span>
+                ${isActive ? 'Active' : 'Paused'}
+              </span>
+            </td>
+            <td class="p-4 text-right space-x-2">
+              <button onclick="triggerScheduleNow('${s.id}')" class="px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 hover:bg-blue-100 font-bold text-[11px] transition-colors">Run Now</button>
+              <button onclick="toggleScheduleStatus('${s.id}', '${isActive ? 'paused' : 'active'}')" class="px-2 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 text-[11px] font-semibold transition-colors">${isActive ? 'Pause' : 'Resume'}</button>
+              <button onclick="deleteSchedule('${s.id}')" class="px-2 py-1 rounded-md bg-rose-50 text-rose-700 hover:bg-rose-100 text-[11px] font-semibold transition-colors">Delete</button>
+            </td>
+          </tr>
+        `;
+        }).join('');
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-rose-600">Failed to load schedules: ${err.message}</td></tr>`;
+      }
+    }
+
+    function openScheduleModal() {
+      document.getElementById('modal-schedule').classList.remove('hidden');
+      lucide.createIcons();
+    }
+    function closeScheduleModal() {
+      document.getElementById('modal-schedule').classList.add('hidden');
+    }
+
+    async function saveSchedule() {
+      const businessName = document.getElementById('sch-biz-name').value.trim();
+      const industry = document.getElementById('sch-biz-industry').value.trim();
+      if (!businessName || !industry) {
+        alert('Please fill out Business Name and Industry');
+        return;
+      }
+
+      const postTimeVal = document.getElementById('sch-post-time').value || '09:00';
+
+      const payload = {
+        business_name: businessName,
+        businessName,
+        business_industry: industry,
+        businessIndustry: industry,
+        industry,
+        frequency: document.getElementById('sch-frequency').value,
+        preferred_time: postTimeVal,
+        postTime: postTimeVal,
+        tone: document.getElementById('sch-tone').value,
+        status: 'active'
+      };
+
+      try {
+        const res = await fetch('/api/schedules', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          closeScheduleModal();
+          fetchSchedules();
+        } else {
+          alert('Failed to save schedule: ' + data.error);
+        }
+      } catch (err) {
+        alert('Error saving schedule: ' + err.message);
+      }
+    }
+
+    async function triggerScheduleNow(id) {
+      if (!confirm('Run this schedule right now to discover a fresh trending topic and post immediately?')) return;
+      try {
+        const res = await fetch(`/api/schedules/${id}/run-now`, { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          const title = data.blog?.title || data.blogPost?.title || 'New Blog Article';
+          alert('Success: Published blog article "' + title + '"');
+          fetchSchedules();
+          fetchPublishedBlogs();
+        } else {
+          alert('Run failed: ' + (data.error || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('Run error: ' + err.message);
+      }
+    }
+
+    async function toggleScheduleStatus(id, newStatus) {
+      await fetch(`/api/schedules/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+      fetchSchedules();
+    }
+
+    async function deleteSchedule(id) {
+      if (!confirm('Permanently delete this auto-post schedule?')) return;
+      await fetch(`/api/schedules/${id}`, { method: 'DELETE' });
+      fetchSchedules();
+    }
+
+    async function fetchPublishedBlogs() {
+      const grid = document.getElementById('blogs-grid');
+      grid.innerHTML = `<div class="col-span-full p-8 text-center text-slate-500">Loading published blogs...</div>`;
+      try {
+        const res = await fetch('/api/blogs');
+        const data = await res.json();
+        const blogs = data.data || [];
+
+        if (blogs.length === 0) {
+          grid.innerHTML = `<div class="col-span-full p-12 text-center text-slate-500 bg-white rounded-2xl border border-slate-200">No blog posts published yet. Generate a blog or run an auto-post schedule to see articles here!</div>`;
+          return;
+        }
+
+        grid.innerHTML = blogs.map(b => `
+          <div class="tactile-card p-5 space-y-4 flex flex-col justify-between">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-[11px] text-slate-500">
+                <span class="font-semibold text-slate-600">${new Date(b.created_at).toLocaleDateString()}</span>
+                <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-semibold border border-slate-200">${b.reading_time_minutes || 4} min read</span>
+              </div>
+              <h3 class="font-bold text-slate-900 text-sm leading-snug line-clamp-2">${b.title}</h3>
+              <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed">${b.excerpt || b.body.slice(0, 140)}...</p>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+              <button onclick="viewBlog('${b.id}')" class="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1">Read Full Article <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></button>
+            </div>
+          </div>
+        `).join('');
+        lucide.createIcons();
+      } catch (err) {
+        grid.innerHTML = `<div class="col-span-full p-8 text-center text-rose-600">Failed to load blogs: ${err.message}</div>`;
+      }
+    }
+
+    async function viewBlog(id) {
+      try {
+        const res = await fetch(`/api/blogs/${id}`);
+        const data = await res.json();
+        if (data.success && data.blog) {
+          const b = data.blog;
+          document.getElementById('modal-blog-title').textContent = b.title;
+          document.getElementById('modal-blog-body').textContent = b.body;
+          document.getElementById('modal-view-blog').classList.remove('hidden');
+          lucide.createIcons();
+        }
+      } catch (err) {
+        alert('Failed to load article: ' + err.message);
+      }
+    }
+
+    function closeBlogModal() {
+      document.getElementById('modal-view-blog').classList.add('hidden');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
